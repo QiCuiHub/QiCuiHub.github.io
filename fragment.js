@@ -40,15 +40,6 @@ vec2 df64_add(vec2 a, vec2 b){
     return st.xy;
 }
 
-vec4 splitComp(vec2 a){
-    vec2 t = a * 4097.0;
-    vec2 temp = (t - a) + zero;
-    vec2 hi = (t - temp) + zero;
-    vec2 lo = (a - hi);
-    
-    return vec4(hi.x, lo.x, hi.y, lo.y);
-}
-
 vec2 df64_mult(vec2 a, vec2 b){
     vec2 p;
     
