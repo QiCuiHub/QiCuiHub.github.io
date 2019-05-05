@@ -40,7 +40,6 @@ vec2 df64_add(vec2 a, vec2 b){
     return st.xy;
 }
 
-
 vec4 splitComp(vec2 a){
     vec2 t = a * 4097.0;
     vec2 temp = (t - a) + zero;
@@ -48,27 +47,6 @@ vec4 splitComp(vec2 a){
     vec2 lo = (a - hi);
     
     return vec4(hi.x, lo.x, hi.y, lo.y);
-}
-
-/*
-vec4 splitComp(vec2 a){
-    vec2 t = a * 4097.0 + zero;
-    vec2 hi = t / 4097.0;
-    vec2 lo = a - hi;
-    
-    return vec4(hi.x, lo.x, hi.y, lo.y);
-}
-*/
-
-vec2 twoProd(float a, float b){
-    float p = (a * b) + zero.x;
-    vec4 s = splitComp(vec2(a, b)) + vec4(zero, zero);
-    
-    float err = ((s.x * s.z - p)
-                    + s.x * s.w + s.y * s.z) 
-                    + s.y * s.w;
-    
-    return vec2(p, err);
 }
 
 vec2 df64_mult(vec2 a, vec2 b){
@@ -81,19 +59,6 @@ vec2 df64_mult(vec2 a, vec2 b){
     
     return p;
 }
-
-/*
-vec2 df64_mult(vec2 a, vec2 b){
-    vec2 p;
-    
-    p = twoProd(a.x, b.x);
-    p.y += a.x * b.y;
-    p.y += a.y * b.x;
-    p = quickTwoSum(p.x, p.y);
-    
-    return p;
-}
-*/
 
 void main() {
     
@@ -121,7 +86,6 @@ void main() {
 
         // z' = (z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
         z = vec4(df64_add(real, c.xy), df64_add(complex, c.zw));
-        //z = vec4(real, complex) + c;    
             
         iter += 1.0;
         if (max(abs(z.x), abs(z.z)) >= 2.0) break;

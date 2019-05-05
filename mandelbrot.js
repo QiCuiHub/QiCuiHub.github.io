@@ -90,14 +90,14 @@ app.ticker.add((delta) => {
         quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
     }
     
-    // Zoom in
+    // Zoom in - Pg Up
     if (keyState[33]){
         state.scale *= zoom;
         quad.shader.uniforms.scale = split(state.scale);
         movementSpeed *= zoom;
     }
     
-    // Zoom out
+    // Zoom out - Pg Down
     if (keyState[34]){
         state.scale /= zoom;
         quad.shader.uniforms.scale = split(state.scale);
