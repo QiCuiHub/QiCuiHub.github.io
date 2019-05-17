@@ -8,10 +8,11 @@ document.body.appendChild(app.view);
 
 // Check Available Presicion
 const gl = app.renderer.context.gl;
-let precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
-const node = document.createTextNode("Mantissa is " + precision + " bits"); 
+const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
+const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+const node = document.createTextNode("Mantissa is " + precision + " bits, " + "Renderer is " + renderer); 
 document.getElementById("debug").appendChild(node); 
-
 
 // Full Screen Quad
 const geometry = new PIXI.Geometry()
