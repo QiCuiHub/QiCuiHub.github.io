@@ -56,7 +56,7 @@ void main() {
     vec4 z = vec4(0.0, 0.0, 0.0, 0.0); 
     
     // center + (gl_FragCoord.xy - offset) * scale
-    vec4 f = vec4(floor(gl_FragCoord.x - offset.x), 0.0, floor(gl_FragCoord.y - offset.y), 0.0);
+    vec4 f = vec4(gl_FragCoord.x - offset.x, 0.0, gl_FragCoord.y - offset.y, 0.0);
     vec4 s = vec4(df64_mult(f.xy, scale), df64_mult(f.zw, scale)); 
     vec4 c = vec4(df64_add(center.xy, s.xy), df64_add(center.zw, s.zw));  
     
