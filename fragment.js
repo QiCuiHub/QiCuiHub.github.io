@@ -1,5 +1,4 @@
 const fragmentSrc = `
-
 /* Adapted from http://andrewthall.org/papers/df64_qf128.pdf */
 
 precision highp float;
@@ -8,21 +7,21 @@ uniform vec2 scale;
 uniform vec2 offset;
 uniform vec4 center;
 uniform vec2 zero;
-uniform float one;
-
-uniform float time;
 
 vec2 quickTwoSum(float a, float b){
     float s = (a + b) + zero.x; // Stop compiler optimization
-    float e = b - (s - a);
+    float v = (s - a);
 
+    float e = b - (s - a);
+    
     return vec2(s, e);
 }
 
 vec4 twoSumComp(vec2 a, vec2 b){
     vec2 s = (a + b) + zero; // Stop compiler optimization
     vec2 v = (s - a) + zero; // Stop compiler optimization
-    vec2 e = (a - (s - v)) + (b - v); // Getting interference from something
+    
+    vec2 e = (a - (s - v)) + (b - v);
 
     return vec4(s.x, e.x, s.y, e.y);
 }
@@ -56,12 +55,12 @@ void main() {
     vec4 z = vec4(0.0, 0.0, 0.0, 0.0); 
     
     // center + (gl_FragCoord.xy - offset) * scale
-    vec4 f = vec4(floor(gl_FragCoord.x - offset.x), 0.0, floor(gl_FragCoord.y - offset.y), 0.0);
+    vec4 f = vec4(gl_FragCoord.x - offset.x, 0.0, gl_FragCoord.y - offset.y, 0.0);
     vec4 s = vec4(df64_mult(f.xy, scale), df64_mult(f.zw, scale)); 
     vec4 c = vec4(df64_add(center.xy, s.xy), df64_add(center.zw, s.zw));  
     
     float iter = 0.0;
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 256; i++)
     { 
         // Real
         vec2 real = df64_add(
@@ -79,11 +78,11 @@ void main() {
         z = vec4(df64_add(real, c.xy), df64_add(complex, c.zw));
             
         iter += 1.0;
-        if (max(abs(z.x), abs(z.z)) >= 2.0) break;
+        if (abs(z.w + z.y) >= 2.0) break;
     }
 
-    float col = iter / 100.0;
-    gl_FragColor = vec4(col, col, col, 1.0);
+    vec3 col = iter < 256.0 ? vec3(iter / 256.0) : vec3(1.0);
+    gl_FragColor = vec4(col, 1.0);
 }
 
 `;

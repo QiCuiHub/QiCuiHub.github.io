@@ -7,12 +7,11 @@ const app = new PIXI.Application(resolution);
 document.body.appendChild(app.view);
 
 // Check Available Presicion
-const canvas = document.querySelector("#getGl");
-const gl = canvas.getContext("webgl");
-console.log(
-    gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT),
-    gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.MEDIUM_FLOAT)
-);
+const gl = app.renderer.context.gl;
+let precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
+const node = document.createTextNode("Mantissa is " + precision + " bits"); 
+document.getElementById("debug").appendChild(node); 
+
 
 // Full Screen Quad
 const geometry = new PIXI.Geometry()
@@ -25,7 +24,7 @@ const geometry = new PIXI.Geometry()
     .addIndex([0, 1, 2, 0, 2, 3]);
 
 const state = {
-    center : [-0.5, 0.0],
+    center : [-(resolution.height / resolution.width), 0.0],
     scale  : 0.004,
     time   : 0,   
 }
@@ -35,7 +34,7 @@ const uniforms = {
     offset : [resolution.width / 2.0, resolution.height / 2.0],
     scale  : split(state.scale),
     time   : 0,
-    zero   : [0.0, 0.0]
+    zero   : [0.0000000000001, 0.0000000000001]
 };
 
 const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);
@@ -64,7 +63,7 @@ app.ticker.add((delta) => {
                 "\n y: " + quad.shader.uniforms.center[2] + 
                 "\n ey: " + quad.shader.uniforms.center[3] + 
                 "\n s: " + quad.shader.uniforms.scale[0] + 
-                "\n es: " + quad.shader.uniforms.scale[1]
+                "\n es: " + quad.shader.uniforms.scale[1] 
     
     // Up
     if (keyState[38]){
