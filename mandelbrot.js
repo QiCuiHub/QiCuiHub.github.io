@@ -35,7 +35,7 @@ const uniforms = {
     offset : [resolution.width / 2.0, resolution.height / 2.0],
     scale  : split(state.scale),
     time   : 0,
-    zero   : [0.0000000000001, 0.0000000000001]
+    zero   : [0.00000000000001, 0.00000000000001]
 };
 
 const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);

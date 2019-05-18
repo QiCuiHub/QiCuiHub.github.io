@@ -10,8 +10,6 @@ uniform vec2 zero;
 
 vec2 quickTwoSum(float a, float b){
     float s = (a + b) + zero.x; // Stop compiler optimization
-    float v = (s - a);
-
     float e = b - (s - a);
     
     return vec2(s, e);
@@ -78,7 +76,7 @@ void main() {
         z = vec4(df64_add(real, c.xy), df64_add(complex, c.zw));
             
         iter += 1.0;
-        if (abs(z.w + z.y) >= 2.0) break;
+        if (abs(z.y + z.w) >= 2.0) break;
     }
 
     vec3 col = iter < 256.0 ? vec3(iter / 256.0) : vec3(1.0);
