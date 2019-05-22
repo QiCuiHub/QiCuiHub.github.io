@@ -5,6 +5,8 @@ const resolution = {
 
 const app = new PIXI.Application(resolution);
 const im = app.renderer.plugins.interaction;
+im.moveWhenInside = true;
+
 document.body.appendChild(app.view);
 
 // Check Available Presicion and Renderer
@@ -64,18 +66,16 @@ let prevcoord = null;
 
 quad
     .on('touchmove', (e) => {
-        if (im.mouseOverRenderer){
-            let pos = e.data.getLocalPosition(quad);
-            if (prevcoord === null) prevcoord = pos;
-            
-            state.center[0] += movementSpeed * (prevcoord.x - pos.x);
-            state.center[1] += movementSpeed * (pos.y - prevcoord.y);
-            
-            prevcoord = pos;
-            
-        }else{
-            prevcoord = null;
-        }
+        let pos = e.data.getLocalPosition(quad);
+        if (prevcoord === null) prevcoord = pos;
+        
+        state.center[0] += movementSpeed * (prevcoord.x - pos.x);
+        state.center[1] += movementSpeed * (pos.y - prevcoord.y);
+        
+        prevcoord = pos;
+    });
+    .on('touchend', (e) => {
+        prevcoord = null;
     });
 
 // Render
