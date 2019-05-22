@@ -4,6 +4,7 @@ const resolution = {
 }
 
 const app = new PIXI.Application(resolution);
+const im = app.renderer.plugins.interaction;
 document.body.appendChild(app.view);
 
 // Check Available Presicion and Renderer
@@ -27,7 +28,7 @@ const geometry = new PIXI.Geometry()
 const state = {
     center : [-(resolution.height / resolution.width), 0.0],
     scale  : 0.004,
-    time   : 0,   
+    time   : 0   
 }
     
 const uniforms = {
@@ -41,12 +42,12 @@ const uniforms = {
 const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);
 const quad = new PIXI.Mesh(geometry, shader, uniforms);
 const coords = new PIXI.Text('x: 0, y: 0',{fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
-
 quad.interactive = true;
 
 app.stage.addChild(quad);
 app.stage.addChild(coords);
 
+// Movement
 let keyState = {};
 
 window.addEventListener('keydown', (e) => {
@@ -57,16 +58,30 @@ window.addEventListener('keyup', (e) => {
     keyState[e.keyCode || e.which] = false;
 },true);
 
-quad
-    .on('tap', (e) => {
-        state.scale *= 0.99;
-    });
-
 let zoom = 0.99;
 let movementSpeed = 4 * state.scale;
+let prevcoord = null;
 
+quad
+    .on('touchmove', (e) => {
+        if (im.mouseOverRenderer){
+            let pos = e.data.getLocalPosition(quad);
+            if (prevcoord === null) prevcoord = pos;
+            
+            state.center[0] += movementSpeed * (prevcoord.x - pos.x);
+            state.center[1] += movementSpeed * (pos.y - prevcoord.y);
+            
+            prevcoord = pos;
+            
+        }else{
+            prevcoord = null;
+        }
+    });
+
+// Render
 app.ticker.add((delta) => {
-    coords.text = " x: " + quad.shader.uniforms.center[0] +
+    coords.text = "fps: " + Math.floor(app.ticker.FPS) +
+                "\n x: " + quad.shader.uniforms.center[0] +
                 "\n ex: " + quad.shader.uniforms.center[1] +     
                 "\n y: " + quad.shader.uniforms.center[2] + 
                 "\n ey: " + quad.shader.uniforms.center[3] + 
@@ -76,39 +91,35 @@ app.ticker.add((delta) => {
     // Up
     if (keyState[38]){
         state.center[1] += movementSpeed;
-        quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
     }
     
     // Down
     if (keyState[40]){
         state.center[1] -= movementSpeed;
-        quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
     }
     
     // Left
     if (keyState[39]){
         state.center[0] += movementSpeed;
-        quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
     }
     
     // Right
     if (keyState[37]){
         state.center[0] -= movementSpeed;
-        quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
     }
     
     // Zoom in - Pg Up
     if (keyState[33]){
         state.scale *= zoom;
-        quad.shader.uniforms.scale = split(state.scale);
         movementSpeed *= zoom;
     }
     
     // Zoom out - Pg Down
     if (keyState[34]){
         state.scale /= zoom;
-        quad.shader.uniforms.scale = split(state.scale);
         movementSpeed /= zoom;
     }
     
+    quad.shader.uniforms.scale = split(state.scale);
+    quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
 });
