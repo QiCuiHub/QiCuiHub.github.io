@@ -6,6 +6,7 @@ const resolution = {
 const app = new PIXI.Application(resolution);
 const hammer = new Hammer(app.view);
 hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
+hammer.add( new Hammer.Pinch({ threshold: 0 }) );
 
 document.body.appendChild(app.view);
 
@@ -65,24 +66,33 @@ window.addEventListener('keyup', (e) => {
 let zoom = 0.99;
 let movementSpeed = 4 * state.scale;
 let sens = 1 - (resolution.height / resolution.width);
-let prevcoord = null;
-let scale = "";
 
-hammer
-    .on('pan', (e) => {
-        let pos = {x: e.deltaX * sens, y: e.deltaY * sens};
-        if (prevcoord === null) prevcoord = pos;
+let prevcoord = null;
+let basescale = null;
+let basems = null
+
+hammer.on('pan', (e) => {
+    let pos = {x: e.deltaX * sens, y: e.deltaY * sens};
+    if (prevcoord === null) prevcoord = pos;
         
-        state.center[0] += movementSpeed * (prevcoord.x - pos.x);
-        state.center[1] += movementSpeed * (pos.y - prevcoord.y);
+    state.center[0] += movementSpeed * (prevcoord.x - pos.x);
+    state.center[1] += movementSpeed * (pos.y - prevcoord.y);
         
-        prevcoord = pos
+    prevcoord = pos
         
-        if (e.isFinal) prevcoord = null;
-    })
-    .on('pinch', (e) => {
-        scale = e.scale + "";
-    })
+    if (e.isFinal) prevcoord = null;
+})
+hammer.on('pinch', (e) => {
+    if (basescale === null) basescale = state.scale;
+    if (basems === null) basems = movementSpeed;
+
+    state.scale = basescale / e.scale;
+    movementSpeed = basems / e.scale;
+})
+hammer.on('pinchend', (e) => {
+    basescale = null; 
+    basems = null;
+});
 
 // Render
 app.ticker.add((delta) => {
@@ -92,7 +102,7 @@ app.ticker.add((delta) => {
                 "\n y: " + quad.shader.uniforms.center[2] + 
                 "\n ey: " + quad.shader.uniforms.center[3] + 
                 "\n s: " + quad.shader.uniforms.scale[0] + 
-                "\n es: " + quad.shader.uniforms.scale[1] + scale;
+                "\n es: " + quad.shader.uniforms.scale[1];
     
     // Up
     if (keyState[38]){
