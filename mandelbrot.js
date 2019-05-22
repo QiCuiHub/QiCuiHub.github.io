@@ -6,7 +6,7 @@ const resolution = {
 const app = new PIXI.Application(resolution);
 document.body.appendChild(app.view);
 
-// Check Available Presicion
+// Check Available Presicion and Renderer
 const gl = app.renderer.context.gl;
 const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
@@ -42,6 +42,8 @@ const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);
 const quad = new PIXI.Mesh(geometry, shader, uniforms);
 const coords = new PIXI.Text('x: 0, y: 0',{fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
 
+quad.interactive = true;
+
 app.stage.addChild(quad);
 app.stage.addChild(coords);
 
@@ -55,10 +57,15 @@ window.addEventListener('keyup', (e) => {
     keyState[e.keyCode || e.which] = false;
 },true);
 
+quad
+    .on('tap', (e) => {
+        state.scale *= 0.99;
+    });
+
 let zoom = 0.99;
 let movementSpeed = 4 * state.scale;
 
-app.ticker.add((delta) => {    
+app.ticker.add((delta) => {
     coords.text = " x: " + quad.shader.uniforms.center[0] +
                 "\n ex: " + quad.shader.uniforms.center[1] +     
                 "\n y: " + quad.shader.uniforms.center[2] + 

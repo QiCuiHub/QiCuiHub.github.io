@@ -76,7 +76,7 @@ void main() {
         z = vec4(df64_add(real, c.xy), df64_add(complex, c.zw));
             
         iter += 1.0;
-        if (abs(z.y + z.w) >= 2.0) break;
+        if (z.x * z.x + z.z * z.z >= 4.0) break;
     }
 
     vec3 col = iter < 256.0 ? vec3(iter / 256.0) : vec3(1.0);
