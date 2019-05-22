@@ -73,7 +73,7 @@ quad
         state.center[1] += movementSpeed * (pos.y - prevcoord.y);
         
         prevcoord = pos;
-    });
+    })
     .on('touchend', (e) => {
         prevcoord = null;
     });
