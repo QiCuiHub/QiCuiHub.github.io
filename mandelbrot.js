@@ -1,3 +1,11 @@
+// Split double into two singles
+let split = (a) => {
+    let hi = Math.fround(a);
+    let lo = a - hi;
+    
+    return [hi, lo];
+}
+
 const resolution = {
     width: 800,
     height: 600
@@ -44,7 +52,7 @@ const uniforms = {
 };
 
 // Add
-const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);
+const shader = PIXI.Shader.from(vertex, fragment, uniforms);
 const quad = new PIXI.Mesh(geometry, shader, uniforms);
 const coords = new PIXI.Text('x: 0, y: 0',{fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
 quad.interactive = true;
@@ -96,7 +104,7 @@ hammer.on('pinchend', (e) => {
 
 // Render
 app.ticker.add((delta) => {
-    coords.text = "fps: " + Math.floor(app.ticker.FPS) +
+    coords.text = " fps: " + Math.floor(app.ticker.FPS) +
                 "\n x: " + quad.shader.uniforms.center[0] +
                 "\n ex: " + quad.shader.uniforms.center[1] +     
                 "\n y: " + quad.shader.uniforms.center[2] + 
