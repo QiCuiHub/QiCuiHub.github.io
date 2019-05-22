@@ -4,8 +4,8 @@ const resolution = {
 }
 
 const app = new PIXI.Application(resolution);
-const im = app.renderer.plugins.interaction;
-im.moveWhenInside = true;
+const hammer = new Hammer(app.view);
+hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 
 document.body.appendChild(app.view);
 
@@ -27,6 +27,7 @@ const geometry = new PIXI.Geometry()
         2) 
     .addIndex([0, 1, 2, 0, 2, 3]);
 
+// State
 const state = {
     center : [-(resolution.height / resolution.width), 0.0],
     scale  : 0.004,
@@ -41,6 +42,7 @@ const uniforms = {
     zero   : [0.00000000000001, 0.00000000000001]
 };
 
+// Add
 const shader = PIXI.Shader.from(vertexSrc, fragmentSrc, uniforms);
 const quad = new PIXI.Mesh(geometry, shader, uniforms);
 const coords = new PIXI.Text('x: 0, y: 0',{fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
@@ -62,21 +64,25 @@ window.addEventListener('keyup', (e) => {
 
 let zoom = 0.99;
 let movementSpeed = 4 * state.scale;
+let sens = 1 - (resolution.height / resolution.width);
 let prevcoord = null;
+let scale = "";
 
-quad
-    .on('touchmove', (e) => {
-        let pos = e.data.getLocalPosition(quad);
+hammer
+    .on('pan', (e) => {
+        let pos = {x: e.deltaX * sens, y: e.deltaY * sens};
         if (prevcoord === null) prevcoord = pos;
         
         state.center[0] += movementSpeed * (prevcoord.x - pos.x);
         state.center[1] += movementSpeed * (pos.y - prevcoord.y);
         
-        prevcoord = pos;
+        prevcoord = pos
+        
+        if (e.isFinal) prevcoord = null;
     })
-    .on('touchend', (e) => {
-        prevcoord = null;
-    });
+    .on('pinch', (e) => {
+        scale = e.scale + "";
+    })
 
 // Render
 app.ticker.add((delta) => {
@@ -86,7 +92,7 @@ app.ticker.add((delta) => {
                 "\n y: " + quad.shader.uniforms.center[2] + 
                 "\n ey: " + quad.shader.uniforms.center[3] + 
                 "\n s: " + quad.shader.uniforms.scale[0] + 
-                "\n es: " + quad.shader.uniforms.scale[1] 
+                "\n es: " + quad.shader.uniforms.scale[1] + scale;
     
     // Up
     if (keyState[38]){
@@ -121,5 +127,5 @@ app.ticker.add((delta) => {
     }
     
     quad.shader.uniforms.scale = split(state.scale);
-    quad.shader.uniforms.center = split(state.center[0]).concat(split(state.center[1]));
+    quad.shader.uniforms.center = [...split(state.center[0]), ...split(state.center[1])];
 });
