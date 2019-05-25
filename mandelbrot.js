@@ -39,15 +39,13 @@ const geometry = new PIXI.Geometry()
 // State
 const state = {
     center : [-(resolution.height / resolution.width), 0.0],
-    scale  : 0.004,
-    time   : 0   
+    scale  : 0.004
 }
     
 const uniforms = {
     center : [...split(state.center[0]), ...split(state.center[1])],
     offset : [resolution.width / 2.0, resolution.height / 2.0],
     scale  : split(state.scale),
-    time   : 0,
     zero   : [0.00000000000001, 0.00000000000001]
 };
 
@@ -79,28 +77,24 @@ let prevcoord = null;
 let basescale = null;
 let basems = null
 
-hammer.on('pan', (e) => {
-    let pos = {x: e.deltaX * sens, y: e.deltaY * sens};
-    if (prevcoord === null) prevcoord = pos;
-        
-    state.center[0] += movementSpeed * (prevcoord.x - pos.x);
-    state.center[1] += movementSpeed * (pos.y - prevcoord.y);
-        
-    prevcoord = pos
-        
-    if (e.isFinal) prevcoord = null;
-})
-hammer.on('pinch', (e) => {
-    if (basescale === null) basescale = state.scale;
-    if (basems === null) basems = movementSpeed;
-
-    state.scale = basescale / e.scale;
-    movementSpeed = basems / e.scale;
-})
-hammer.on('pinchend', (e) => {
-    basescale = null; 
-    basems = null;
-});
+hammer
+    .on('panstart', (e) => {
+        prevcoord = {x: e.deltaX * sens, y: e.deltaY * sens};
+    })
+    .on('panmove', (e) => {
+        pos = {x: e.deltaX * sens, y: e.deltaY * sens};
+        state.center[0] += movementSpeed * (prevcoord.x - pos.x);
+        state.center[1] += movementSpeed * (pos.y - prevcoord.y);
+        prevcoord = pos
+    })
+    .on('pinchstart', (e) => {
+        basescale = state.scale;
+        basems = movementSpeed;
+    })
+    .on('pinch', (e) => {
+        state.scale = basescale / e.scale;
+        movementSpeed = basems / e.scale;
+    })
 
 // Render
 app.ticker.add((delta) => {
