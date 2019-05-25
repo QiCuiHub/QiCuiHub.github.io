@@ -61,6 +61,15 @@ app.stage.addChild(coords);
 // Movement
 let keyState = {};
 
+let zoom = 0.99;
+let movementSpeed = 4 * state.scale;
+let panSens = 1 - (resolution.height / resolution.width);
+let scrollZoom = 1.188;
+
+let prevCoord = null;
+let baseScale = null;
+let baseMs = null
+
 window.addEventListener('keydown', (e) => {
     keyState[e.keyCode || e.which] = true;
 }, true);
@@ -69,31 +78,33 @@ window.addEventListener('keyup', (e) => {
     keyState[e.keyCode || e.which] = false;
 },true);
 
-let zoom = 0.99;
-let movementSpeed = 4 * state.scale;
-let sens = 1 - (resolution.height / resolution.width);
-
-let prevcoord = null;
-let basescale = null;
-let basems = null
+window.addEventListener('wheel', (e) => {
+    if (Math.sign(e.deltaY) > 0){
+        state.scale *= scrollZoom;
+        movementSpeed *= scrollZoom;
+    }else {
+        state.scale /= scrollZoom;
+        movementSpeed /= scrollZoom;
+    }
+},true);
 
 hammer
     .on('panstart', (e) => {
-        prevcoord = {x: e.deltaX * sens, y: e.deltaY * sens};
+        prevCoord = {x: e.deltaX * panSens, y: e.deltaY * panSens};
     })
     .on('panmove', (e) => {
-        pos = {x: e.deltaX * sens, y: e.deltaY * sens};
-        state.center[0] += movementSpeed * (prevcoord.x - pos.x);
-        state.center[1] += movementSpeed * (pos.y - prevcoord.y);
-        prevcoord = pos
+        pos = {x: e.deltaX * panSens, y: e.deltaY * panSens};
+        state.center[0] += movementSpeed * (prevCoord.x - pos.x);
+        state.center[1] += movementSpeed * (pos.y - prevCoord.y);
+        prevCoord = pos
     })
     .on('pinchstart', (e) => {
-        basescale = state.scale;
-        basems = movementSpeed;
+        baseScale = state.scale;
+        baseMs = movementSpeed;
     })
     .on('pinch', (e) => {
-        state.scale = basescale / e.scale;
-        movementSpeed = basems / e.scale;
+        state.scale = baseScale / e.scale;
+        movementSpeed = baseMs / e.scale;
     })
 
 // Render
