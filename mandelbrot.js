@@ -16,7 +16,7 @@ const hammer = new Hammer(app.view);
 hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 hammer.add( new Hammer.Pinch({ threshold: 0 }) );
 
-document.body.appendChild(app.view);
+document.getElementById("app").appendChild(app.view);
 
 // Check Available Presicion and Renderer
 const gl = app.renderer.context.gl;
