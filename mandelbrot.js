@@ -62,9 +62,9 @@ app.stage.addChild(coords);
 let keyState = {};
 
 let zoom = 0.99;
+let scrollZoom = 0.84;
 let movementSpeed = 4 * state.scale;
 let panSens = 1 - (resolution.height / resolution.width);
-let scrollZoom = 1.188;
 
 let prevCoord = null;
 let baseScale = null;
@@ -80,11 +80,15 @@ window.addEventListener('keyup', (e) => {
 
 window.addEventListener('wheel', (e) => {
     if (Math.sign(e.deltaY) > 0){
-        state.scale *= scrollZoom;
-        movementSpeed *= scrollZoom;
-    }else {
         state.scale /= scrollZoom;
         movementSpeed /= scrollZoom;
+    }else {
+        state.scale *= scrollZoom;
+        movementSpeed *= scrollZoom;
+        
+        // fix transition between singles and doubles
+        state.center[1] += movementSpeed / 100000.0;
+        state.center[0] += movementSpeed / 100000.0;
     }
 },true);
 
@@ -137,14 +141,14 @@ app.ticker.add((delta) => {
         state.center[0] -= movementSpeed;
     }
     
-    // Zoom in - Pg Up
-    if (keyState[33]){
+    // Zoom in - Q
+    if (keyState[81]){
         state.scale *= zoom;
         movementSpeed *= zoom;
     }
     
-    // Zoom out - Pg Down
-    if (keyState[34]){
+    // Zoom out - W
+    if (keyState[87]){
         state.scale /= zoom;
         movementSpeed /= zoom;
     }
