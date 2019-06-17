@@ -50,7 +50,7 @@ vec2 df64_mult(vec2 a, vec2 b){
 
 void main() {
     
-    vec4 z = vec4(0.0, 0.0, 0.0, 0.0); 
+    vec4 z = vec4(0.0); 
     
     // center + (gl_FragCoord.xy - offset) * scale
     vec4 f = vec4(gl_FragCoord.x - offset.x, 0.0, gl_FragCoord.y - offset.y, 0.0);
@@ -79,7 +79,7 @@ void main() {
         if (z.x * z.x + z.z * z.z >= 4.0) break;
     }
 
-    vec3 col = iter < 256.0 ? vec3(iter / 256.0) : vec3(1.0);
+    vec3 col = iter < 256.0 ? vec3(iter / 256.0) : vec3(0.9);
     gl_FragColor = vec4(col, 1.0);
 }
 

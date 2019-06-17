@@ -61,9 +61,9 @@ app.stage.addChild(coords);
 // Movement
 let keyState = {};
 
-let zoom = 0.99;
+let zoom = 0.98;
 let scrollZoom = 0.84;
-let movementSpeed = 4 * state.scale;
+let movementSpeed = 8 * state.scale;
 let panSens = 1 - (resolution.height / resolution.width);
 
 let prevCoord = null;
@@ -111,9 +111,17 @@ hammer
         movementSpeed = baseMs / e.scale;
     })
 
+let avgFPS = 1.0;
+let compSpeed = 0.0;
+let compZoom = 0.0;
+
 // Render
 app.ticker.add((delta) => {
-    coords.text = " fps: " + Math.floor(app.ticker.FPS) +
+    avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS);
+    compSpeed = movementSpeed * delta;
+    compZoom = Math.pow(zoom, delta);
+    
+    coords.text = " fps: " + Math.floor(avgFPS) +
                 "\n x: " + quad.shader.uniforms.center[0] +
                 "\n ex: " + quad.shader.uniforms.center[1] +     
                 "\n y: " + quad.shader.uniforms.center[2] + 
@@ -123,34 +131,34 @@ app.ticker.add((delta) => {
     
     // Up
     if (keyState[38]){
-        state.center[1] += movementSpeed;
+        state.center[1] += compSpeed;
     }
     
     // Down
     if (keyState[40]){
-        state.center[1] -= movementSpeed;
+        state.center[1] -= compSpeed;
     }
     
     // Left
     if (keyState[39]){
-        state.center[0] += movementSpeed;
+        state.center[0] += compSpeed;
     }
     
     // Right
     if (keyState[37]){
-        state.center[0] -= movementSpeed;
+        state.center[0] -= compSpeed;
     }
     
     // Zoom in - Q
     if (keyState[81]){
-        state.scale *= zoom;
-        movementSpeed *= zoom;
+        state.scale *= compZoom;
+        movementSpeed *= compZoom;
     }
     
     // Zoom out - W
     if (keyState[87]){
-        state.scale /= zoom;
-        movementSpeed /= zoom;
+        state.scale /= compZoom;
+        movementSpeed /= compZoom;
     }
     
     quad.shader.uniforms.scale = split(state.scale);
