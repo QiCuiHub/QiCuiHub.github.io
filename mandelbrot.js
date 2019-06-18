@@ -61,9 +61,9 @@ app.stage.addChild(coords);
 // Movement
 let keyState = {};
 
-let zoom = 0.98;
+let zoom = 0.99;
 let scrollZoom = 0.84;
-let movementSpeed = 8 * state.scale;
+let movementSpeed = 4 * state.scale;
 let panSens = 1 - (resolution.height / resolution.width);
 
 let prevCoord = null;
@@ -118,8 +118,8 @@ let compZoom = 0.0;
 // Render
 app.ticker.add((delta) => {
     avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS);
-    compSpeed = movementSpeed * delta;
-    compZoom = Math.pow(zoom, delta);
+    compSpeed = movementSpeed * delta * 2;
+    compZoom = Math.pow(zoom, delta * 2);
     
     coords.text = " fps: " + Math.floor(avgFPS) +
                 "\n x: " + quad.shader.uniforms.center[0] +
