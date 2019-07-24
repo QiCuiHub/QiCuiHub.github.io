@@ -11,3 +11,8 @@ canvas {
     margin: 0 auto;
     display: block;
 }
+
+.footer {
+    display: inline;
+    margin-top: 10px;
+}
