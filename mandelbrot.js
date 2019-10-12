@@ -79,16 +79,24 @@ window.addEventListener('keyup', (e) => {
 },true);
 
 window.addEventListener('wheel', (e) => {
-    if (Math.sign(e.deltaY) > 0){
-        state.scale /= scrollZoom;
-        movementSpeed /= scrollZoom;
-    }else {
-        state.scale *= scrollZoom;
-        movementSpeed *= scrollZoom;
-        
-        // fix transition between singles and doubles
-        state.center[1] += movementSpeed / 100000.0;
-        state.center[0] += movementSpeed / 100000.0;
+    // only scroll when mouse over canvas
+    if (app.renderer.plugins.interaction.mouseOverRenderer){
+ 
+        // zoom in
+        if (Math.sign(e.deltaY) > 0){
+            state.scale /= scrollZoom;
+            movementSpeed /= scrollZoom;
+            
+        // zoom out
+        }else {
+            state.scale *= scrollZoom;
+            movementSpeed *= scrollZoom;
+
+            // fix transition between singles and doubles
+            state.center[1] += movementSpeed / 100000.0;
+            state.center[0] += movementSpeed / 100000.0;
+        }
+
     }
 },true);
 
