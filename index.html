@@ -1,15 +1,50 @@
 <head>
-    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Qi Cui</h1>
-    <div id="debug"></div>
-    <div id="app"></div>
-    <div>Use Q / Scroll Up to zoom in and W / Scroll Down to zoom out, pinch to zoom on mobile.</div>
+    <div class="outer">
+        <div class="inner">
+            <div class="grid">
+            
+                <div id="intro" class="grid-item">
+                    <div>
+                        <h1>Qi Cui</h1>
+                        <a href="https://github.com/QiCuiHub">
+                          <img src="assets/GitHub-Mark-32px.png">
+                        </a>
+                        <a href="https://www.linkedin.com/in/qi-cui-597186149/">
+                          <img src="assets/LI-In-Bug.png">
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="app" class="grid-item"></div>
+
+                <div class="grid-item">
+                    <h2>About Me</h2>
+                    <p id="info">
+                        I am a software engineer with a passion for all things computer science. I've dabbled in everything
+                        from networking to machine learning to embedded systems. Take some time to explore the Mandelbrot set
+                        in the WebGL app to the right.
+                    </p>
+                </div>
+           
+                <div id="app-info" class="grid-item">
+                    <h3>Controls</h3>
+                    <div>Zoom in/out - Q/W - Scrl Up/Scrl Down</div>
+                    <div>Pan - Arrow keys - Click and drag</div>
+                    <div>Show debug information - D</div>
+                    <div>Touch and Pinch on mobile</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.3/pixi.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-<script src="shaders.js"></script>
-<script src="mandelbrot.js"></script>
+<script src="js/shaders.js"></script>
+<script src="js/mandelbrot.js"></script>
