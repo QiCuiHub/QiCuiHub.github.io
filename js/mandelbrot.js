@@ -111,6 +111,7 @@ window.addEventListener('wheel', (e) => {
 // Mobile controls
 hammer
     .on('panstart', (e) => {
+        app.ticker.start();
         prevCoord = {x: e.deltaX * panSens, y: e.deltaY * panSens};
     })
     .on('panmove', (e) => {
