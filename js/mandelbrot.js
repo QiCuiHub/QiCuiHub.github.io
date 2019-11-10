@@ -89,8 +89,7 @@ window.addEventListener('keyup', (e) => {
 window.addEventListener('wheel', (e) => {
     // only scroll when mouse over canvas
     if (app.renderer.plugins.interaction.mouseOverRenderer){
-        app.ticker.start();
- 
+
         // zoom in
         if (Math.sign(e.deltaY) > 0){
             state.scale /= scrollZoom;
