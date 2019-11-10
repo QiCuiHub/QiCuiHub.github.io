@@ -121,6 +121,7 @@ hammer
         prevCoord = pos
     })
     .on('pinchstart', (e) => {
+        app.ticker.start();
         baseScale = state.scale;
         baseMs = movementSpeed;
     })
