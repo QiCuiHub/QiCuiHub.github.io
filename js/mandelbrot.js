@@ -32,6 +32,8 @@ hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 hammer.add( new Hammer.Pinch({ threshold: 0 }) );
 
 document.getElementById("app").appendChild(app.view);
+document.getElementById("app").onwheel = (e) => {e.preventDefault()};
+
 
 // Check Available Presicion and Renderer
 const gl = app.renderer.context.gl;
