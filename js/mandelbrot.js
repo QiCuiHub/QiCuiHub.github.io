@@ -75,8 +75,7 @@ let mouseover = false;
 
 let zoom = 0.99;
 let scrollZoom = 0.84;
-let movementSpeed = 4 * state.scale;
-let panSens = 1 - (resolution.height / resolution.width);
+let movementSpeed = state.scale;
 let showDebug = false;
 
 let prevCoord = null;
@@ -122,10 +121,10 @@ window.addEventListener('wheel', (e) => {
 hammer
     .on('panstart', (e) => {
         app.ticker.start();
-        prevCoord = {x: e.deltaX * panSens, y: e.deltaY * panSens};
+        prevCoord = {x: e.deltaX, y: e.deltaY};
     })
     .on('panmove', (e) => {
-        pos = {x: e.deltaX * panSens, y: e.deltaY * panSens};
+        pos = {x: e.deltaX, y: e.deltaY};
         state.center[0] += movementSpeed * (prevCoord.x - pos.x);
         state.center[1] += movementSpeed * (pos.y - prevCoord.y);
         prevCoord = pos

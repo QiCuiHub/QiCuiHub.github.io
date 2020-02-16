@@ -1,7 +1,7 @@
 * {
     color: white;
     text-align: center;
-    font-family: 'Ubuntu Condensed', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     text-decoration: none;
 }
 
@@ -11,6 +11,14 @@ body {
 
 td {
     text-align: left;
+}
+
+h1 {
+    font-size: 1.2vw;
+}
+
+h2 {
+    font-size: 1.0vw;
 }
 
 .outer {
@@ -40,12 +48,24 @@ td {
     background-color: black;
 }
 
+.profile-info {
+    text-align: left;
+    margin: 0% 10% 0% 10%;
+    font-size: 0.75vw;
+}
+
 #profile {
-    display: inline-block
+    display: inline-block;
+    height: auto;
 }
 
 #profile * {
     margin-top: 4%
+}
+
+#test {
+  max-width: 100%;
+  height: auto;
 }
 
 #intro {
@@ -55,14 +75,8 @@ td {
     justify-content: center
 }
 
-.profile-info {
-    text-align: left;
-    margin: 0% 10% 0% 10%;
-    font-size: 1.5vh;
-}
-
 #app-info {
     border-spacing: 20px;
     margin: 0 auto;
-    font-size: 1.5vh;
+    font-size: 0.75vw;
 }
