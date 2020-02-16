@@ -5,20 +5,17 @@
     text-decoration: none;
 }
 
-body {
-    background-image: url("../assets/bg.png");
-}
+body { background-image: url("../assets/bg.png"); }
 
-td {
-    text-align: left;
-}
+td { text-align: left; }
 
-h1 {
-    font-size: 1.2vw;
-}
+h1 { font-size: 1.2vw; }
 
-h2 {
-    font-size: 1.0vw;
+h2 { font-size: 1.0vw; }
+
+img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .outer {
@@ -51,32 +48,34 @@ h2 {
 .profile-info {
     text-align: left;
     margin: 0% 10% 0% 10%;
-    font-size: 0.75vw;
-}
-
-#profile {
-    display: inline-block;
-    height: auto;
-}
-
-#profile * {
-    margin-top: 4%
-}
-
-#test {
-  max-width: 100%;
-  height: auto;
+    font-size: 0.8vw;
 }
 
 #intro {
-    display: inline-flex;
-    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center
+}
+
+#intro>div {
+    overflow: hidden;
+    padding: 1%
+}
+
+#intro>div:nth-child(1) {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 2;
+    align-items: flex-end;
+}
+
+#intro>div:nth-child(2) {
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 #app-info {
-    border-spacing: 20px;
+    border-spacing: 2vh;
     margin: 0 auto;
-    font-size: 0.75vw;
+    font-size: 0.8vw;
 }

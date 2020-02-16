@@ -8,8 +8,8 @@ let split = (a) => {
 
 // State
 const resolution = {
-    width: window.innerWidth * 0.26,
-    height: window.innerHeight * 0.3
+    width: window.innerWidth * 0.3,
+    height: window.innerHeight * 0.36
 }
 
 let gridItem = document.getElementsByClassName('grid-item');
@@ -19,8 +19,8 @@ for (var i = 0; i < gridItem.length; i++) {
 }
 
 const state = {
-    center : [-(resolution.height / resolution.width), 0.0],
-    scale  : (resolution.height / resolution.width) * 0.01
+    center : [-0.5, 0.0],
+    scale  : 2.4 / Math.min(resolution.height, resolution.width)
 }
     
 const uniforms = {
