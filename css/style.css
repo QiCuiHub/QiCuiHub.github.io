@@ -9,6 +9,10 @@ body {
     background-image: url("../assets/bg.png");
 }
 
+td {
+    text-align: left;
+}
+
 .outer {
     display: table;
     position: absolute;
@@ -39,13 +43,29 @@ body {
     width: 600px;
 }
 
+#profile {
+    display: inline-block
+}
+
+#profile * {
+    margin-top: 4%
+}
+
 #intro {
     display: inline-flex;
+    vertical-align: middle;
     align-items: center;
     justify-content: center
 }
 
-#info {
+.profile-info {
     text-align: left;
-    margin: 0% 10% 0% 10%
+    margin: 0% 10% 0% 10%;
+    font-size: 18;
+}
+
+#app-info {
+    font-size: 18;
+    border-spacing: 20px;
+    margin: 0 auto;
 }
