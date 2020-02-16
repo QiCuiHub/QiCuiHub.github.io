@@ -12,8 +12,6 @@ const resolution = {
     height: window.innerHeight * 0.3
 }
 
-console.log(resolution.width, resolution.height)
-
 let gridItem = document.getElementsByClassName('grid-item');
 for (var i = 0; i < gridItem.length; i++) {
   gridItem[i].style.width = resolution.width;
