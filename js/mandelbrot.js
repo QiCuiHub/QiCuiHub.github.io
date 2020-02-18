@@ -230,8 +230,10 @@ app.view.onmouseout = () => {
 window.addEventListener("resize", () => {
     let newW = document.getElementById("app").offsetWidth + 1;
     let newH = document.getElementById("app").offsetHeight + 1;
- 
+
     app.renderer.resize(newW, newH);
     quad.setTransform(0, 0, newW / resolution.width, newH / resolution.height);
+    quad.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
+ 
     app.ticker.update();
 });
