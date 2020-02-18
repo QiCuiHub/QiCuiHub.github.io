@@ -8,14 +8,8 @@ let split = (a) => {
 
 // State
 const resolution = {
-    width: window.innerWidth * 0.3,
-    height: window.innerHeight * 0.36
-}
-
-let gridItem = document.getElementsByClassName('grid-item');
-for (var i = 0; i < gridItem.length; i++) {
-  gridItem[i].style.width = resolution.width;
-  gridItem[i].style.height = resolution.height;
+    width: document.getElementById("app").clientWidth,
+    height: document.getElementById("app").clientHeight
 }
 
 const state = {
@@ -40,7 +34,6 @@ hammer.add( new Hammer.Pinch({ threshold: 0 }) );
 document.getElementById("app").appendChild(app.view);
 document.getElementById("app").onwheel = (e) => {e.preventDefault()};
 
-
 // Check Available Presicion and Renderer
 const gl = app.renderer.context.gl;
 const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
@@ -61,7 +54,6 @@ const geometry = new PIXI.Geometry()
 const shader = PIXI.Shader.from(vertex, fragment, uniforms);
 const quad = new PIXI.Mesh(geometry, shader, uniforms);
 const coords = new PIXI.Text('', {fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
-quad.interactive = true;
 
 app.stage.addChild(quad);
 app.stage.addChild(coords);
@@ -233,3 +225,13 @@ app.view.onmouseout = () => {
         }
     }
 }
+
+// resize app on window resize
+window.addEventListener("resize", () => {
+    let newW = window.innerWidth * 0.3;
+    let newH =  window.innerHeight * 0.36;
+ 
+    app.renderer.resize(newW, newH);
+    quad.setTransform(0, 0, newW / resolution.width, newH / resolution.height);
+    app.ticker.update();
+});
