@@ -8,8 +8,8 @@ let split = (a) => {
 
 // State
 const resolution = {
-    width: document.getElementById("app").clientWidth,
-    height: document.getElementById("app").clientHeight
+    width: document.getElementById("app").offsetWidth + 1,
+    height: document.getElementById("app").offsetHeight + 1
 }
 
 const state = {
@@ -228,8 +228,8 @@ app.view.onmouseout = () => {
 
 // resize app on window resize
 window.addEventListener("resize", () => {
-    let newW = window.innerWidth * 0.3;
-    let newH =  window.innerHeight * 0.36;
+    let newW = document.getElementById("app").offsetWidth + 1;
+    let newH = document.getElementById("app").offsetHeight + 1;
  
     app.renderer.resize(newW, newH);
     quad.setTransform(0, 0, newW / resolution.width, newH / resolution.height);

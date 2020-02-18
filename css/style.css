@@ -45,6 +45,7 @@ img {
     background-color: black;
     width: 30vw;
     height: 36vh;
+    overflow: hidden;
 }
 
 .profile-info {
