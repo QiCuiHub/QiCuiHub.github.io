@@ -136,7 +136,7 @@ let compZoom = 0.0;
 
 app.ticker.add((delta) => {
     avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS);
-    compSpeed = movementSpeed * delta * 2;
+    compSpeed = movementSpeed * delta * 8;
     compZoom = Math.pow(zoom, delta * 2);
     
     if (showDebug){
@@ -233,7 +233,7 @@ window.addEventListener("resize", () => {
 
     app.renderer.resize(newW, newH);
     quad.setTransform(0, 0, newW / resolution.width, newH / resolution.height);
-    quad.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
- 
-    app.ticker.update();
+    if (state.scale > 10e-5) quad.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
+    
+    app.ticker.update();  
 });

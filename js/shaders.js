@@ -42,8 +42,7 @@ vec2 df64_mult(vec2 a, vec2 b){
     vec2 p;
     
     p = vec2(a.x * b.x, a.y * b.y);
-    p.y += a.x * b.y;
-    p.y += a.y * b.x;
+    p.y += a.x * b.y + a.y * b.x;
     p = quickTwoSum(p.x, p.y);
     
     return p;
@@ -65,7 +64,7 @@ void main() {
     
     // center + (gl_FragCoord.xy - offset) * scale
     vec4 f = vec4(gl_FragCoord.x - offset.x, 0.0, gl_FragCoord.y - offset.y, 0.0);
-    vec4 s = vec4(df64_mult(f.xy, scale) + zero, df64_mult(f.zw, scale) + zero); // Stop compiler optimization
+    vec4 s = vec4(df64_mult(f.xy, scale), df64_mult(f.zw, scale));
     vec4 c = vec4(df64_add(center.xy, s.xy), df64_add(center.zw, s.zw));  
   
     vec3 color = vec3(0.0);
