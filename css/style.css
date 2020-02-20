@@ -84,3 +84,7 @@ img {
     margin: 0 auto;
     font-size: 1.6vmin;
 }
+
+#control-info>h2 {
+    margin-bottom: 0;
+}
