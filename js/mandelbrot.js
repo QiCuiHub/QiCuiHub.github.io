@@ -31,9 +31,6 @@ const hammer = new Hammer(app.view);
 hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 hammer.add( new Hammer.Pinch({ threshold: 0 }) );
 
-document.getElementById("app").appendChild(app.view);
-document.getElementById("app").onwheel = (e) => {e.preventDefault()};
-
 // Check Available Presicion and Renderer
 const gl = app.renderer.context.gl;
 const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision;
@@ -87,7 +84,7 @@ window.addEventListener('keyup', (e) => {
 
 window.addEventListener('wheel', (e) => {
     // only scroll when mouse over canvas
-    if (app.renderer.plugins.interaction.mouseOverRenderer){
+    if (mouseover){
 
         // zoom in
         if (Math.sign(e.deltaY) > 0){
@@ -200,7 +197,6 @@ app.ticker.add((delta) => {
 
 // Only render when mouse over the canvas
 app.ticker.stop();
-app.ticker.update();
 
 app.view.onmouseover = () => {
     app.ticker.start();
@@ -237,3 +233,14 @@ window.addEventListener("resize", () => {
     
     app.ticker.update();  
 });
+
+// remove loader and add app to dom
+let appElement = document.getElementById("app")
+
+while (appElement.firstChild) {
+    appElement.removeChild(appElement.firstChild);
+}
+
+appElement.appendChild(app.view);
+appElement.onwheel = (e) => {e.preventDefault()};
+app.ticker.update();
