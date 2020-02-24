@@ -1,84 +1,89 @@
-<head>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-</head>
+<!DOCTYPE html>
 
-<body>
-    <div class="outer">
-        <div class="inner">
-            <div class="grid">
-            
-                <div id="intro" class="grid-item">
-                    <div><img id="pic" src="assets/profile.png"/></div>
-                    <div>
-  
-                        <div class="icon-grid">
-                            <a class="icon" href="https://github.com/QiCuiHub">
-                                <img class="icon" src="assets/GitHub-Mark-32px.png">
-                            </a>
+<html lang="en">
+    <head>
+        <title>qicui.dev</title>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="outer">
+            <div class="inner">
+                <div class="grid">
+                
+                    <div id="intro" class="grid-item">
+                        <div><img id="pic" src="assets/profile.png" alt="Profile image"/></div>
+                        <div>
+      
+                            <div class="icon-grid">
+                                <a class="icon" href="https://github.com/QiCuiHub">
+                                    <img class="icon" src="assets/GitHub-Mark-32px.png" alt="GitHub">
+                                </a>
+                            </div>
+                            
+                            <div class="icon-grid">
+                                <a class="icon" href="https://www.linkedin.com/in/qi-cui-597186149/">
+                                  <img class="icon" src="assets/LI-In-Bug.png" alt="LinkedIn">
+                                </a>
+                            </div>
+                            
+                            <div class="icon-grid">
+                                <a class="icon" href="https://github.com/QiCuiHub/QiCuiHub.github.io/raw/master/assets/resume.pdf">
+                                  <img class="icon" src="assets/document-text.svg" alt="Resume">
+                                </a>
+                            </div>
+                      
                         </div>
-                        
-                        <div class="icon-grid">
-                            <a class="icon" href="https://www.linkedin.com/in/qi-cui-597186149/">
-                              <img class="icon" src="assets/LI-In-Bug.png">
-                            </a>
-                        </div>
-                        
-                        <div class="icon-grid">
-                            <a class="icon" href="https://github.com/QiCuiHub/QiCuiHub.github.io/raw/master/assets/resume.pdf">
-                              <img class="icon" src="assets/document-text.svg">
-                            </a>
-                        </div>
-                  
                     </div>
-                </div>
 
-                <div id="app" class="grid-item">
-                    <div class="loader"></div>
-                </div>
-
-                <div class="grid-item">
-                    <div>
-                        <h1>Hi, I'm Qi Cui</h1>
-                        <p class="profile-info">
-                            A software engineer with a passion for all things computer science. 
-                            I've dabbled in everything from networking to machine learning to embedded systems.
-                        </p>
-                        <br/>
-                        <p class="profile-info">
-                            You can find out more about me on my LinkedIn profile and GitHub. 
-                            While you're here take some time to explore the Mandelbrot Set
-                            in the WebGL app to the right.
-                        </p>
+                    <div id="app" class="grid-item">
+                        <div class="loader"></div>
                     </div>
-                </div>
-           
-                <div id="control-info" class="grid-item">   
-                    <div>
-                        <h2>Controls</h2>
-                        <table id="app-info">
-                            <tr>
-                                <td>Zoom</td>
-                                <td>Q / W or Mouse Wheel</td>
-                            </tr>
-                            <tr>
-                                <td>Move</td>
-                                <td>← → ↑ ↓ or Click and Drag <br/> Touch and Pinch on mobile</td>
-                            </tr>
-                            <tr>
-                                <td>Info</td>
-                                <td>D</td>
-                            </tr>
-                        </table>
+
+                    <div class="grid-item">
+                        <div>
+                            <h1>Hi, I'm Qi Cui</h1>
+                            <p class="profile-info">
+                                A software engineer with a passion for all things computer science. 
+                                I've dabbled in everything from networking to machine learning to embedded systems.
+                            </p>
+                            <br/>
+                            <p class="profile-info">
+                                You can find out more about me on my LinkedIn profile and GitHub. 
+                                While you're here take some time to explore the Mandelbrot Set
+                                in the WebGL app to the right.
+                            </p>
+                        </div>
+                    </div>
+               
+                    <div id="control-info" class="grid-item">   
+                        <div>
+                            <h2>Controls</h2>
+                            <table id="app-info">
+                                <tr>
+                                    <td>Zoom</td>
+                                    <td>Q / W or Mouse Wheel</td>
+                                </tr>
+                                <tr>
+                                    <td>Move</td>
+                                    <td>← → ↑ ↓ or Click and Drag <br/> Touch and Pinch on mobile</td>
+                                </tr>
+                                <tr>
+                                    <td>Info</td>
+                                    <td>D</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.3/pixi.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-<script src="js/shaders.js"></script>
-<script src="js/mandelbrot.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.3/pixi.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+        <script src="js/shaders.js"></script>
+        <script src="js/mandelbrot.js"></script>
+    </body>
+</html>
 
