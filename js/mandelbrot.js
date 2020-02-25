@@ -100,7 +100,6 @@ window.addEventListener('wheel', (e) => {
             state.center[1] += movementSpeed / 100000.0;
             state.center[0] += movementSpeed / 100000.0;
         }
-
     }
 }, true);
 
@@ -116,6 +115,9 @@ hammer
         state.center[1] += movementSpeed * (pos.y - prevCoord.y);
         prevCoord = pos
     })
+    .on('panend', (e) => {
+        if (!mouseover) app.ticker.stop();
+    })
     .on('pinchstart', (e) => {
         app.ticker.start();
         baseScale = state.scale;
@@ -124,6 +126,9 @@ hammer
     .on('pinch', (e) => {
         state.scale = baseScale / e.scale;
         movementSpeed = baseMs / e.scale;
+    })
+    .on('pinchend', (e) => {
+        if (!mouseover) app.ticker.stop();
     })
 
 // Render
@@ -195,7 +200,7 @@ app.ticker.add((delta) => {
     quad.shader.uniforms.center = [...split(state.center[0]), ...split(state.center[1])];
 });
 
-// Only render when mouse over the canvas
+// Start render when mouse over the canvas
 app.ticker.stop();
 
 app.view.onmouseover = () => {
@@ -244,3 +249,6 @@ while (appElement.firstChild) {
 appElement.appendChild(app.view);
 appElement.onwheel = (e) => {e.preventDefault()};
 app.ticker.update();
+
+// ios not loading sometimes need rerender
+setInterval(() => {app.ticker.update()}, 1000);
