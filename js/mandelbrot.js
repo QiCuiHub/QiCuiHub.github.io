@@ -251,4 +251,4 @@ appElement.onwheel = (e) => {e.preventDefault()};
 app.ticker.update();
 
 // ios not loading sometimes need rerender
-setInterval(() => {app.ticker.update()}, 1000);
+setTimeout(() => {app.ticker.update()}, 1000);
