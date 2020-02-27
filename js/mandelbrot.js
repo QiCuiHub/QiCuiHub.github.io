@@ -143,15 +143,15 @@ app.ticker.add((delta) => {
     
     if (showDebug){
         coords.text = "renderer: " + renderer +
-                    "\n x: " + quad.shader.uniforms.center[0] +
-                    "\n ex: " + quad.shader.uniforms.center[1] +     
-                    "\n y: " + quad.shader.uniforms.center[2] + 
-                    "\n ey: " + quad.shader.uniforms.center[3] + 
-                    "\n s: " + quad.shader.uniforms.scale[0] + 
-                    "\n es: " + quad.shader.uniforms.scale[1] + 
-                    "\n iterations: " + quad.shader.uniforms.iterations +
-                    "\n mantissa: " + precision + " bit" +
-                    "\n fps: " + Math.floor(avgFPS);
+                    "\nx: " + quad.shader.uniforms.center[0] +
+                    "\nex: " + quad.shader.uniforms.center[1] +     
+                    "\ny: " + quad.shader.uniforms.center[2] + 
+                    "\ney: " + quad.shader.uniforms.center[3] + 
+                    "\ns: " + quad.shader.uniforms.scale[0] + 
+                    "\nes: " + quad.shader.uniforms.scale[1] + 
+                    "\niterations: " + quad.shader.uniforms.iterations +
+                    "\nmantissa: " + precision + " bit" +
+                    "\nfps: " + Math.floor(avgFPS);
     } else coords.text = "";
     
     // Up
