@@ -1,6 +1,9 @@
+PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH
+
 // Split double into two singles
 let split = (a) => {
-    let hi = Math.fround(a);
+    let b = a + a * 1e-7 * Math.random() // improve stability
+    let hi = Math.fround(b);
     let lo = a - hi;
     
     return [hi, lo];
@@ -22,7 +25,7 @@ const uniforms = {
     offset     : [resolution.width / 2.0, resolution.height / 2.0],
     scale      : split(state.scale),
     zero       : [0.00000000000001, 0.00000000000001],
-    iterations : 512.0,
+    iterations : 384.0,
 };
 
 // App
@@ -95,11 +98,8 @@ window.addEventListener('wheel', (e) => {
         }else {
             state.scale *= scrollZoom;
             movementSpeed *= scrollZoom;
-
-            // fix transition between singles and doubles
-            state.center[1] += movementSpeed / 100000.0;
-            state.center[0] += movementSpeed / 100000.0;
         }
+ 
     }
 }, true);
 
@@ -143,15 +143,11 @@ app.ticker.add((delta) => {
     
     if (showDebug){
         coords.text = "renderer: " + renderer +
-                    "\nx: " + quad.shader.uniforms.center[0] +
-                    "\nex: " + quad.shader.uniforms.center[1] +     
-                    "\ny: " + quad.shader.uniforms.center[2] + 
-                    "\ney: " + quad.shader.uniforms.center[3] + 
-                    "\ns: " + quad.shader.uniforms.scale[0] + 
-                    "\nes: " + quad.shader.uniforms.scale[1] + 
-                    "\niterations: " + quad.shader.uniforms.iterations +
-                    "\nmantissa: " + precision + " bit" +
-                    "\nfps: " + Math.floor(avgFPS);
+                    "\nx: " + state.center[0] +  
+                    "\ny: " + state.center[1] + 
+                    "\ns: " + state.scale + 
+                    "\niterations: " + Math.floor(quad.shader.uniforms.iterations) +
+                    "\nfps: " + Math.floor(avgFPS)
     } else coords.text = "";
     
     // Up
@@ -188,12 +184,12 @@ app.ticker.add((delta) => {
     
     // Increase iterations - A
     if (keyState[65]){
-        quad.shader.uniforms.iterations += 2.0 * delta;
+        quad.shader.uniforms.iterations += delta;
     }
     
     // Decrease iterations - S
     if (keyState[83]){
-        quad.shader.uniforms.iterations -= 2.0 * delta;
+        quad.shader.uniforms.iterations -= delta;
     }
     
     quad.shader.uniforms.scale = split(state.scale);
@@ -234,7 +230,7 @@ window.addEventListener("resize", () => {
 
     app.renderer.resize(newW, newH);
     quad.setTransform(0, 0, newW / resolution.width, newH / resolution.height);
-    if (state.scale > 10e-5) quad.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
+    quad.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
     
     app.ticker.update();  
 });
@@ -248,7 +244,7 @@ while (appElement.firstChild) {
 
 appElement.appendChild(app.view);
 appElement.onwheel = (e) => {e.preventDefault()};
-app.ticker.update();
+app.render();
 
 // ios not loading sometimes need rerender
-setTimeout(() => {app.ticker.update()}, 1000);
+setTimeout(() => {app.render()}, 1000);

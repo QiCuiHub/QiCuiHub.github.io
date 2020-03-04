@@ -1,8 +1,6 @@
 const fragment = `
 /* Adapted from http://andrewthall.org/papers/df64_qf128.pdf */
 
-precision highp float;
-
 uniform vec2 scale;
 uniform vec2 offset;
 uniform vec4 center;
@@ -70,7 +68,7 @@ void main() {
     vec3 color = vec3(0.0);
     float iter = 0.0;
     
-    for(int i = 0; i < 1024; i ++)
+    for(int i = 0; i < 2048; i ++)
     { 
         if (iter > iterations) break;
 
