@@ -25,7 +25,7 @@ const uniforms = {
     offset     : [resolution.width / 2.0, resolution.height / 2.0],
     scale      : split(state.scale),
     zero       : [0.00000000000001, 0.00000000000001],
-    iterations : 384.0,
+    iterations : 256.0,
 };
 
 // App

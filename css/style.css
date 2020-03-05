@@ -14,8 +14,6 @@ h1 { font-size: 3vmin; }
 h2 { font-size: 2.4vmin; }
 
 img {
-    width: 100%;
-    height: 100%;
     object-fit: contain;
 }
 
@@ -54,13 +52,13 @@ img {
 .profile-info {
     text-align: left;
     margin: 0% 10% 0% 10%;
-    font-size: 1.8vmin;
+    font-size: 2vmin;
 }
 
 .icon {
     display: grid;
-    max-height: 32px;
-    max-width: 32px;
+    max-height: 2.5vmin;
+    max-width: 2.5vmin;
     justify-self: center;
 }
 
@@ -117,8 +115,8 @@ img {
 }
 
 #intro>img {
-    max-height: 200px;
-    max-width: 200px;
+    max-height: 16vmin;
+    max-width: 16vmin;
     grid-row: 1;
     grid-column: 2;
     align-self: end;
@@ -134,9 +132,9 @@ img {
 }
 
 #app-info {
-    border-spacing: 2vh;
+    border-spacing: 3vh;
     margin: 0 auto;
-    font-size: 1.8vmin;
+    font-size: 2vmin;
 }
 
 #control-info h2 {
