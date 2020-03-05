@@ -57,8 +57,8 @@ img {
 
 .icon {
     display: grid;
-    max-height: 2.5vmin;
-    max-width: 2.5vmin;
+    max-height: 3vmin;
+    max-width: 3vmin;
     justify-self: center;
 }
 
@@ -115,8 +115,8 @@ img {
 }
 
 #intro>img {
-    max-height: 16vmin;
-    max-width: 16vmin;
+    max-height: 18vmin;
+    max-width: 18vmin;
     grid-row: 1;
     grid-column: 2;
     align-self: end;
