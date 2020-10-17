@@ -243,7 +243,7 @@ while (appElement.firstChild) {
 }
 
 appElement.appendChild(app.view);
-appElement.onwheel = (e) => {e.preventDefault()};
+appElement.onwheel = e => e.preventDefault();
 app.render();
 
 // ios not loading sometimes need rerender
