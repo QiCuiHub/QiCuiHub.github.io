@@ -1,6 +1,9 @@
 const fragment = `
 /* Adapted from http://andrewthall.org/papers/df64_qf128.pdf */
 
+#define TWOPI 6.28318530718
+#define INVERSE_LN2 1.44269504089
+
 uniform vec2 scale;
 uniform vec2 offset;
 uniform vec4 center;
@@ -42,12 +45,12 @@ vec2 df64_mult(vec2 a, vec2 b){
     p = vec2(a.x * b.x, a.y * b.y);
     p.y += a.x * b.y + a.y * b.x;
     p = quickTwoSum(p.x, p.y);
-    
+
     return p;
 }
 
 vec3 get_color(float v, float c){
-    float x = v / c * 6.28318530718;
+    float x = v / c * TWOPI;
 
     float R = 1.0 - cos(x * 5.8);
     float G = 1.0 - cos(x * 5.5);
@@ -58,8 +61,9 @@ vec3 get_color(float v, float c){
 
 void main() {
     
-    vec4 z = vec4(0.0); 
-    
+    vec4 z = vec4(0.0);
+    float log_zn = 0.0;
+
     // center + (gl_FragCoord.xy - offset) * scale
     vec4 f = vec4(gl_FragCoord.x - offset.x, 0.0, gl_FragCoord.y - offset.y, 0.0);
     vec4 s = vec4(df64_mult(f.xy, scale), df64_mult(f.zw, scale));
@@ -67,7 +71,8 @@ void main() {
   
     vec3 color = vec3(0.0);
     float iter = 0.0;
-    
+    float frac = 0.0;
+
     for(int i = 0; i < 2048; i ++)
     { 
         if (iter > iterations) break;
@@ -86,10 +91,12 @@ void main() {
 
         // z' = (z.z * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
         z = vec4(df64_add(real, c.xy), df64_add(complex, c.zw));
+        log_zn = log(z.x * z.x + z.z * z.z);
 
-        // Escape time coloring
-        if (z.x * z.x + z.z * z.z >= 4.0) {
-            color = get_color(iter, iterations);
+        // Smoothed escape time coloring
+        if (log_zn >= 4.0) {
+            frac = iter - log(log_zn) * INVERSE_LN2;
+            color = get_color(frac, iterations);
             break;
         }
 
