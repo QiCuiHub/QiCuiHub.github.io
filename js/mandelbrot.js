@@ -94,7 +94,7 @@ const hdMesh = new MandelbrotMesh(app, resolution, 2, false)
 // hi res sprite for super sampling
 const SSAATexture = PIXI.RenderTexture.create({ width: hdMesh.width, height: hdMesh.height, scaleMode: PIXI.SCALE_MODES.LINEAR })
 const SSAASprite = new PIXI.Sprite(SSAATexture)
-SSAASprite.setTransform(0, resolution.height, 1, -1, 0, 0, 0, 0, 0)
+SSAASprite.setTransform(0, resolution.height, 1, -1, 0, 0, 0, 0, 0) // webgl frame buffers have inverted y axis
 SSAASprite.width = resolution.width
 SSAASprite.height = resolution.height
 
@@ -288,8 +288,8 @@ app.ticker.add((delta) => {
     }
 
     if (keyStateLen === 0 && !mousemoving && scrolling === null){
-        SSAAPass()
         app.ticker.stop()
+        SSAAPass()
 
     } else {
         SSAASprite.visible = false
