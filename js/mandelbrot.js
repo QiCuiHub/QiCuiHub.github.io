@@ -9,6 +9,7 @@ class MandelbrotMesh {
     constructor(app, resolution, resolutionScale){
         this.width  = resolution.width * resolutionScale
         this.height = resolution.height * resolutionScale
+        this.resolutionScale = resolutionScale
 
         this.state = {
             center     : [-0.5, 0.0],
@@ -65,8 +66,11 @@ class MandelbrotMesh {
         ]
     }
 
-    resize(newW, newH) {
-        this.mesh.setTransform(0, 0, newW / this.resolution.width, newH / this.resolution.height)
+    resize(newWidth, newHeight) {
+        let newW = newWidth * this.resolutionScale
+        let newH = newHeight * this.resolutionScale
+
+        this.mesh.setTransform(0, 0, newW / this.width, newH / this.height)
         this.mesh.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
     }
 }
@@ -300,8 +304,17 @@ window.addEventListener("resize", () => {
     let newH = document.getElementById("app").offsetHeight + 1
 
     app.renderer.resize(newW, newH)
-    baseMesh.resize(newW, newH)
-    app.ticker.update()
+    
+    for (i in meshes){
+        mesh = meshes[i]
+        mesh.resize(newW, newH)
+    }
+
+    SSAATexture.framebuffer.resize(newW * hdMesh.resolutionScale, newH * hdMesh.resolutionScale)
+    SSAASprite.setTransform(0, newH, 1, -1, 0, 0, 0, 0, 0)
+    SSAASprite.width = newW
+    SSAASprite.height = newH
+    SSAAPass()
 })
 
 // remove loader and add app to dom
