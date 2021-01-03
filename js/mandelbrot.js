@@ -8,19 +8,19 @@ const resolution = {
 class MandelbrotMesh {
     constructor(app, resolution, resolutionScale){
         this.width  = resolution.width * resolutionScale
-        this.height = resolution.height * resolutionScale 
+        this.height = resolution.height * resolutionScale
 
         this.state = {
             center     : [-0.5, 0.0],
             scale      : 2.4 / Math.min(this.height, this.width),
-            iterations : 180        
+            iterations : 180
         }
 
-        this.movementSpeed = this.state.scale * resolutionScale;
+        this.movementSpeed = this.state.scale * resolutionScale
 
         let uniforms = {
             center     : [
-                ...MandelbrotMesh._split(this.state.center[0]), 
+                ...MandelbrotMesh._split(this.state.center[0]),
                 ...MandelbrotMesh._split(this.state.center[1])
             ],
             offset     : [this.width / 2.0, this.height / 2.0],
@@ -31,18 +31,18 @@ class MandelbrotMesh {
 
         // full canvas quad
         let vertices = [
-            -this.width, -this.height, 
+            -this.width, -this.height,
              this.width, -this.height,
              this.width,  this.height,
             -this.width,  this.height
         ]
 
         let geometry = new PIXI.Geometry()
-            .addAttribute('aVertexPosition', vertices, 2) 
-            .addIndex([0, 1, 2, 0, 2, 3]);
+            .addAttribute('aVertexPosition', vertices, 2)
+            .addIndex([0, 1, 2, 0, 2, 3])
 
-        let shader = PIXI.Shader.from(vertex, fragment, uniforms);
-        this.mesh = new PIXI.Mesh(geometry, shader, uniforms);
+        let shader = PIXI.Shader.from(vertex, fragment, uniforms)
+        this.mesh = new PIXI.Mesh(geometry, shader, uniforms)
     }
 
     /**
@@ -50,96 +50,96 @@ class MandelbrotMesh {
      */
     static _split(a) {
         let b = a + a * 1e-7 * Math.random() // improve stability
-        let hi = Math.fround(b);
-        let lo = a - hi;
-        
-        return [hi, lo];
+        let hi = Math.fround(b)
+        let lo = a - hi
+
+        return [hi, lo]
     }
 
     update() {
-        //console.log(this.test, this.state)
-        this.mesh.shader.uniforms.iterations = this.state.iterations;
-        this.mesh.shader.uniforms.scale = MandelbrotMesh._split(this.state.scale);
+        this.mesh.shader.uniforms.iterations = this.state.iterations
+        this.mesh.shader.uniforms.scale = MandelbrotMesh._split(this.state.scale)
         this.mesh.shader.uniforms.center = [
-            ...MandelbrotMesh._split(this.state.center[0]), 
+            ...MandelbrotMesh._split(this.state.center[0]),
             ...MandelbrotMesh._split(this.state.center[1])
-        ];
+        ]
     }
 
     resize(newW, newH) {
-        this.mesh.setTransform(0, 0, newW / this.resolution.width, newH / this.resolution.height);
+        this.mesh.setTransform(0, 0, newW / this.resolution.width, newH / this.resolution.height)
         this.mesh.shader.uniforms.offset = [newW / 2.0, newH / 2.0]
     }
 }
 
 // App
-const app = new PIXI.Application(resolution);
-const hammer = new Hammer(app.view);
-hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-hammer.add( new Hammer.Pinch({ threshold: 0 }) );
+const app = new PIXI.Application(resolution)
+const hammer = new Hammer(app.view)
+hammer.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) )
+hammer.add( new Hammer.Pinch({ threshold: 0 }) )
 
 // Get debug info
-const gl = app.renderer.context.gl;
-const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+const gl = app.renderer.context.gl
+const debugInfo = gl.getExtension('WEBGL_debug_renderer_info')
+const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
 
 // Add to canvas
-const coords = new PIXI.Text('', {fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'});
+const coords = new PIXI.Text('', {fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'})
 const baseMesh = new MandelbrotMesh(app, resolution, 1, true)
 const hdMesh = new MandelbrotMesh(app, resolution, 2, false)
 
 // hi res sprite for super sampling
-const SSAATexture = PIXI.RenderTexture.create({ width: hdMesh.width, height: hdMesh.height, scaleMode: PIXI.SCALE_MODES.LINEAR });
-const SSAASprite = new PIXI.Sprite(SSAATexture);
+const SSAATexture = PIXI.RenderTexture.create({ width: hdMesh.width, height: hdMesh.height, scaleMode: PIXI.SCALE_MODES.LINEAR })
+const SSAASprite = new PIXI.Sprite(SSAATexture)
 SSAASprite.setTransform(0, resolution.height, 1, -1, 0, 0, 0, 0, 0)
-SSAASprite.width = resolution.width;
-SSAASprite.height = resolution.height;
+SSAASprite.width = resolution.width
+SSAASprite.height = resolution.height
 
-app.stage.addChild(baseMesh.mesh);
-app.stage.addChild(SSAASprite);
-app.stage.addChild(coords);
+app.stage.addChild(baseMesh.mesh)
+app.stage.addChild(SSAASprite)
+app.stage.addChild(coords)
 
 // super sampling function
 let SSAAPass = () => {
-    app.renderer.render(hdMesh.mesh, SSAATexture);
-    SSAASprite.visible = true;
+    app.renderer.render(hdMesh.mesh, SSAATexture)
+    SSAASprite.visible = true
     app.render()
 }
 
 let meshes = [baseMesh, hdMesh]
+let mesh = null
 
 // Movement
-let keyState = {};
-let keyStateLen = 0;
+let keyState = {}
+let keyStateLen = 0
 
-let mouseover = false;
-let mousemoving = false;
-let scrolling = null;
+let mouseover = false
+let mousemoving = false
+let scrolling = null
 
-let zoom = 0.99;
-let scrollZoom = 0.84;
-let showDebug = false;
+let zoom = 0.99
+let scrollZoom = 0.84
+let showDebug = false
 
-let prevCoord = null;
-let baseScale = null;
+let prevCoord = null
+let baseScale = null
 let baseMs = null
 
 window.addEventListener('keydown', (e) => {
-    if (!((e.keyCode || e.which) in keyState)){
-        keyState[e.keyCode || e.which] = true
+    if (!(e.key in keyState)){
+        keyState[e.key] = true
         keyStateLen += 1
     }
 
-    if (e.keyCode == 68 || e.which == 68) showDebug = !showDebug;
-    app.ticker.start();
-}, true);
+    if (e.key === 'd') showDebug = !showDebug
+    app.ticker.start()
+}, true)
 
 window.addEventListener('keyup', (e) => {
-    if ((e.keyCode || e.which) in keyState){
-        delete keyState[e.keyCode || e.which]
+    if (e.key in keyState){
+        delete keyState[e.key]
         keyStateLen -= 1
     }
-},true);
+},true)
 
 window.addEventListener('wheel', (e) => {
     // only scroll when mouse over canvas
@@ -149,27 +149,27 @@ window.addEventListener('wheel', (e) => {
             scrolling = setTimeout(() => {
                 scrolling = null
                 app.ticker.update()
-            }, 250);
+            }, 250)
         }
- 
+
         for (i in meshes) {
-            let mesh = meshes[i]
+            mesh = meshes[i]
 
             // zoom in
             if (Math.sign(e.deltaY) > 0){
-                mesh.state.scale /= scrollZoom;
-                mesh.movementSpeed /= scrollZoom;
-                
+                mesh.state.scale /= scrollZoom
+                mesh.movementSpeed /= scrollZoom
+
             // zoom out
             }else {
-                mesh.state.scale *= scrollZoom;
-                mesh.movementSpeed *= scrollZoom;
+                mesh.state.scale *= scrollZoom
+                mesh.movementSpeed *= scrollZoom
             }
         }
 
         app.ticker.update()
     }
-}, true);
+}, true)
 
 app.view.onmouseover = () => {mouseover = true}
 app.view.onmouseout = () => {mouseover = false}
@@ -182,47 +182,47 @@ hammer
         mousemoving = true
     })
     .on('panmove', (e) => {
-        pos = {x: e.deltaX, y: e.deltaY};
-        
+        pos = {x: e.deltaX, y: e.deltaY}
+
         for (i in meshes) {
-            let mesh = meshes[i]
-            mesh.state.center[0] += mesh.movementSpeed * (prevCoord.x - pos.x);
-            mesh.state.center[1] += mesh.movementSpeed * (pos.y - prevCoord.y);   
+            mesh = meshes[i]
+            mesh.state.center[0] += mesh.movementSpeed * (prevCoord.x - pos.x)
+            mesh.state.center[1] += mesh.movementSpeed * (pos.y - prevCoord.y)
         }
-            
+
         prevCoord = pos
     })
     .on('panend', (e) => {
-        if (!mouseover) app.ticker.stop();
-        mousemoving = false;
+        if (!mouseover) app.ticker.stop()
+        mousemoving = false
     })
     .on('pinchstart', (e) => {
-        app.ticker.start();
+        app.ticker.start()
 
         for (i in meshes) {
-            let mesh = meshes[i]        
-            mesh = mesh.state.scale;
-            mesh = mesh.movementSpeed;
+            mesh = meshes[i]
+            mesh = mesh.state.scale
+            mesh = mesh.movementSpeed
         }
     })
     .on('pinch', (e) => {
         for (i in meshes) {
-            let mesh = meshes[i]           
-            mesh.state.scale = baseScale / e.scale;
-            mesh.movementSpeed = baseMs / e.scale;
+            mesh = meshes[i]
+            mesh.state.scale = baseScale / e.scale
+            mesh.movementSpeed = baseMs / e.scale
         }
     })
     .on('pinchend', (e) => {
-        if (!mouseover) app.ticker.stop();
+        if (!mouseover) app.ticker.stop()
     })
 
 // Render
-let avgFPS = 1.0;
-let compSpeed = 0.0;
-let compZoom = 0.0;
+let avgFPS = 1.0
+let compSpeed = 0.0
+let compZoom = 0.0
 
 app.ticker.add((delta) => {
-    avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS);
+    avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS)
 
     if (showDebug){
         coords.text = "renderer: " + renderer +
@@ -231,85 +231,84 @@ app.ticker.add((delta) => {
                     "\ns: " + baseMesh.state.scale +
                     "\niterations: " + Math.floor(baseMesh.state.iterations) +
                     "\nfps: " + Math.floor(avgFPS)
-    } else coords.text = "";
-    
-    for (i in meshes) {
-        let mesh = meshes[i]
+    } else coords.text = ""
 
-        compSpeed = mesh.movementSpeed * delta * 8;
-        compZoom = Math.pow(zoom, delta * 2);
+    for (i in meshes) {
+        mesh = meshes[i]
+        compSpeed = mesh.movementSpeed * delta * 8
+        compZoom = Math.pow(zoom, delta * 2)
 
         // Up
-        if (keyState[38]){
-            mesh.state.center[1] += compSpeed;
+        if (keyState['ArrowUp']){
+            mesh.state.center[1] += compSpeed
         }
 
         // Down
-        if (keyState[40]){
-            mesh.state.center[1] -= compSpeed;
+        if (keyState['ArrowDown']){
+            mesh.state.center[1] -= compSpeed
         }
-        
-        // Left
-        if (keyState[39]){
-            mesh.state.center[0] += compSpeed;
+
+        // Pan Left
+        if (keyState['ArrowRight']){
+            mesh.state.center[0] += compSpeed
         }
-        
-        // Right
-        if (keyState[37]){
-            mesh.state.center[0] -= compSpeed;
+
+        // Pan Right
+        if (keyState['ArrowLeft']){
+            mesh.state.center[0] -= compSpeed
         }
-        
+
         // Zoom in - Q
-        if (keyState[81]){
-            mesh.state.scale *= compZoom;
-            mesh.movementSpeed *= compZoom;
+        if (keyState['q']){
+            mesh.state.scale *= compZoom
+            mesh.movementSpeed *= compZoom
         }
-        
+
         // Zoom out - W
-        if (keyState[87]){
-            mesh.state.scale /= compZoom;
-            mesh.movementSpeed /= compZoom;
+        if (keyState['w']){
+            mesh.state.scale /= compZoom
+            mesh.movementSpeed /= compZoom
         }
-        
+
         // Increase iterations - A
-        if (keyState[65]){
-            mesh.state.iterations += delta;
+        if (keyState['a']){
+            mesh.state.iterations += delta
         }
 
         // Decrease iterations - S
-        if (keyState[83]){
-            mesh.state.iterations -= delta;
+        if (keyState['s']){
+            mesh.state.iterations -= delta
         }
-        
+
         mesh.update()
     }
 
-    if (keyStateLen == 0 && !mousemoving && scrolling === null){
+    if (keyStateLen === 0 && !mousemoving && scrolling === null){
         SSAAPass()
         app.ticker.stop()
 
     } else {
         SSAASprite.visible = false
     }
-});
+})
 
 app.ticker.stop()
 
 // resize app on window resize
 window.addEventListener("resize", () => {
-    let newW = document.getElementById("app").offsetWidth + 1;
-    let newH = document.getElementById("app").offsetHeight + 1;
+    let newW = document.getElementById("app").offsetWidth + 1
+    let newH = document.getElementById("app").offsetHeight + 1
 
-    app.renderer.resize(newW, newH);
-    baseMesh.resize(newW, newH);
-    app.ticker.update();  
-});
+    app.renderer.resize(newW, newH)
+    baseMesh.resize(newW, newH)
+    app.ticker.update()
+})
 
 // remove loader and add app to dom
 let appElement = document.getElementById("app")
 
 while (appElement.firstChild) {
-    appElement.removeChild(appElement.firstChild);
+    appElement.removeChild(appElement.firstChild)
 }
 
 appElement.appendChild(app.view)
@@ -317,4 +316,4 @@ appElement.onwheel = e => e.preventDefault()
 SSAAPass()
 
 // ios not loading sometimes need rerender
-setTimeout(() => {SSAAPass}, 1000);
+setTimeout(() => {SSAAPass()}, 1000)
