@@ -181,9 +181,9 @@ app.view.onmouseout = () => {mouseover = false}
 // Mobile controls
 hammer
     .on('panstart', (e) => {
-        app.ticker.start()
-        prevCoord = {x: e.deltaX, y: e.deltaY}
         mousemoving = true
+        prevCoord = {x: e.deltaX, y: e.deltaY}
+        app.ticker.start()
     })
     .on('panmove', (e) => {
         pos = {x: e.deltaX, y: e.deltaY}
@@ -197,27 +197,28 @@ hammer
         prevCoord = pos
     })
     .on('panend', (e) => {
-        if (!mouseover) app.ticker.stop()
         mousemoving = false
     })
     .on('pinchstart', (e) => {
-        app.ticker.start()
+        mousemoving = true
 
         for (i in meshes) {
             mesh = meshes[i]
-            mesh = mesh.state.scale
-            mesh = mesh.movementSpeed
+            mesh.baseScale = mesh.state.scale
+            mesh.baseMs = mesh.movementSpeed
         }
+
+        app.ticker.start()
     })
     .on('pinch', (e) => {
         for (i in meshes) {
             mesh = meshes[i]
-            mesh.state.scale = baseScale / e.scale
-            mesh.movementSpeed = baseMs / e.scale
+            mesh.state.scale = mesh.baseScale / e.scale
+            mesh.movementSpeed = mesh.baseMs / e.scale
         }
     })
     .on('pinchend', (e) => {
-        if (!mouseover) app.ticker.stop()
+        mousemoving = false
     })
 
 // Render
@@ -304,7 +305,7 @@ window.addEventListener("resize", () => {
     let newH = document.getElementById("app").offsetHeight + 1
 
     app.renderer.resize(newW, newH)
-    
+
     for (i in meshes){
         mesh = meshes[i]
         mesh.resize(newW, newH)
