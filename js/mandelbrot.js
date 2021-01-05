@@ -88,8 +88,8 @@ const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
 
 // Add to canvas
 const coords = new PIXI.Text('', {fontFamily : 'Arial', fontSize: 12, fill : 0x00ff00, align : 'left'})
-const baseMesh = new MandelbrotMesh(app, resolution, 1, true)
-const hdMesh = new MandelbrotMesh(app, resolution, 2, false)
+const baseMesh = new MandelbrotMesh(app, resolution, 1)
+const hdMesh = new MandelbrotMesh(app, resolution, 2)
 
 // hi res sprite for super sampling
 const SSAATexture = PIXI.RenderTexture.create({ width: hdMesh.width, height: hdMesh.height, scaleMode: PIXI.SCALE_MODES.LINEAR })
@@ -110,7 +110,6 @@ let SSAAPass = () => {
 }
 
 let meshes = [baseMesh, hdMesh]
-let mesh = null
 
 // Movement
 let keyState = {}
@@ -156,9 +155,7 @@ window.addEventListener('wheel', (e) => {
             }, 250)
         }
 
-        for (i in meshes) {
-            mesh = meshes[i]
-
+        for (var mesh of meshes) {
             // zoom in
             if (Math.sign(e.deltaY) > 0){
                 mesh.state.scale /= scrollZoom
@@ -188,8 +185,7 @@ hammer
     .on('panmove', (e) => {
         pos = {x: e.deltaX, y: e.deltaY}
 
-        for (i in meshes) {
-            mesh = meshes[i]
+        for (var mesh of meshes) {
             mesh.state.center[0] += mesh.movementSpeed * (prevCoord.x - pos.x)
             mesh.state.center[1] += mesh.movementSpeed * (pos.y - prevCoord.y)
         }
@@ -202,8 +198,7 @@ hammer
     .on('pinchstart', (e) => {
         mousemoving = true
 
-        for (i in meshes) {
-            mesh = meshes[i]
+        for (var mesh of meshes) {
             mesh.baseScale = mesh.state.scale
             mesh.baseMs = mesh.movementSpeed
         }
@@ -211,8 +206,7 @@ hammer
         app.ticker.start()
     })
     .on('pinch', (e) => {
-        for (i in meshes) {
-            mesh = meshes[i]
+        for (var mesh of meshes) {
             mesh.state.scale = mesh.baseScale / e.scale
             mesh.movementSpeed = mesh.baseMs / e.scale
         }
@@ -238,8 +232,7 @@ app.ticker.add((delta) => {
                     "\nfps: " + Math.floor(avgFPS)
     } else coords.text = ""
 
-    for (i in meshes) {
-        mesh = meshes[i]
+    for (var mesh of meshes) {
         compSpeed = mesh.movementSpeed * delta * 8
         compZoom = Math.pow(zoom, delta * 2)
 
@@ -306,8 +299,7 @@ window.addEventListener("resize", () => {
 
     app.renderer.resize(newW, newH)
 
-    for (i in meshes){
-        mesh = meshes[i]
+    for (var mesh of meshes){
         mesh.resize(newW, newH)
     }
 
