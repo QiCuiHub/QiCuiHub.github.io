@@ -183,14 +183,12 @@ hammer
         app.ticker.start()
     })
     .on('panmove', (e) => {
-        pos = {x: e.deltaX, y: e.deltaY}
-
         for (var mesh of meshes) {
-            mesh.state.center[0] += mesh.movementSpeed * (prevCoord.x - pos.x)
-            mesh.state.center[1] += mesh.movementSpeed * (pos.y - prevCoord.y)
+            mesh.state.center[0] += mesh.movementSpeed * (prevCoord.x - e.deltaX)
+            mesh.state.center[1] += mesh.movementSpeed * (e.deltaY - prevCoord.y)
         }
 
-        prevCoord = pos
+        prevCoord = {x: e.deltaX, y: e.deltaY}
     })
     .on('panend', (e) => {
         mousemoving = false
