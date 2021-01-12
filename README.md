@@ -1,1 +1,2 @@
 # webgl-mandelbrot-doubles
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/QiCuiHub/QiCuiHub.github.io.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/QiCuiHub/QiCuiHub.github.io/alerts/)

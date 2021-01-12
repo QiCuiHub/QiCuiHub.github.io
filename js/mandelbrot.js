@@ -1,3 +1,8 @@
+const ZOOM_SENSITIVITY = 0.99
+const SCROLL_ZOOM_SENSITIVITY = 0.84
+const DEFAULT_ITERATIONS = 180
+const SCROLL_TIMEOUT = 300
+
 PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH
 
 const resolution = {
@@ -14,7 +19,7 @@ class MandelbrotMesh {
         this.state = {
             center     : [-0.5, 0.0],
             scale      : 2.4 / Math.min(this.height, this.width),
-            iterations : 180
+            iterations : DEFAULT_ITERATIONS
         }
 
         this.movementSpeed = this.state.scale * resolutionScale
@@ -114,14 +119,11 @@ let meshes = [baseMesh, hdMesh]
 // Movement
 let keyState = {}
 let keyStateLen = 0
+let showDebug = false
 
 let mouseover = false
 let mousemoving = false
 let scrolling = null
-
-let zoom = 0.99
-let scrollZoom = 0.84
-let showDebug = false
 
 let prevCoord = null
 let baseScale = null
@@ -149,22 +151,25 @@ window.addEventListener('wheel', (e) => {
     if (mouseover){
 
         if (scrolling === null && !app.ticker.started){
-            scrolling = setTimeout(() => {
-                scrolling = null
-                app.ticker.update()
-            }, 250)
+            scrolling = setTimeout(
+                () => {
+                    scrolling = null
+                    app.ticker.update()
+                },
+                SCROLL_TIMEOUT
+            )
         }
 
         for (var mesh of meshes) {
             // zoom in
             if (Math.sign(e.deltaY) > 0){
-                mesh.state.scale /= scrollZoom
-                mesh.movementSpeed /= scrollZoom
+                mesh.state.scale /= SCROLL_ZOOM_SENSITIVITY
+                mesh.movementSpeed /= SCROLL_ZOOM_SENSITIVITY
 
             // zoom out
             }else {
-                mesh.state.scale *= scrollZoom
-                mesh.movementSpeed *= scrollZoom
+                mesh.state.scale *= SCROLL_ZOOM_SENSITIVITY
+                mesh.movementSpeed *= SCROLL_ZOOM_SENSITIVITY
             }
         }
 
@@ -219,20 +224,9 @@ let compSpeed = 0.0
 let compZoom = 0.0
 
 app.ticker.add((delta) => {
-    avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS)
-
-    if (showDebug){
-        coords.text = "renderer: " + renderer +
-                    "\nx: " + baseMesh.state.center[0] +
-                    "\ny: " + baseMesh.state.center[1] +
-                    "\ns: " + baseMesh.state.scale +
-                    "\niterations: " + Math.floor(baseMesh.state.iterations) +
-                    "\nfps: " + Math.floor(avgFPS)
-    } else coords.text = ""
-
     for (var mesh of meshes) {
         compSpeed = mesh.movementSpeed * delta * 8
-        compZoom = Math.pow(zoom, delta * 2)
+        compZoom = Math.pow(ZOOM_SENSITIVITY, delta * 2)
 
         // Up
         if (keyState['ArrowUp']){
@@ -286,6 +280,18 @@ app.ticker.add((delta) => {
     } else {
         SSAASprite.visible = false
     }
+
+    avgFPS = 0.9 * avgFPS + (0.1 * app.ticker.FPS)
+
+    if (showDebug){
+        coords.text = "renderer: " + renderer +
+                    "\nx: " + baseMesh.state.center[0] +
+                    "\ny: " + baseMesh.state.center[1] +
+                    "\ns: " + baseMesh.state.scale +
+                    "\niterations: " + Math.floor(baseMesh.state.iterations) +
+                    "\nrendering: " + !SSAASprite.visible +
+                    "\nfps: " + Math.floor(avgFPS)
+    } else coords.text = ""
 })
 
 app.ticker.stop()

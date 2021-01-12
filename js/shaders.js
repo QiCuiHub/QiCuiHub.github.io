@@ -10,57 +10,36 @@ uniform vec4 center;
 uniform vec2 zero;
 uniform float iterations;
 
-vec2 quickTwoSum(float a, float b){
-    float s = (a + b) + zero.x; // Stop compiler optimization
-    float e = b - (s - a);
-    
-    return vec2(s, e);
-}
-
-vec4 twoSumComp(vec2 a, vec2 b){
+vec2 df64_add(vec2 a, vec2 b){
     vec2 s = (a + b) + zero; // Stop compiler optimization
     vec2 v = (s - a) + zero; // Stop compiler optimization
-    
     vec2 e = (a - (s - v)) + (b - v);
 
-    return vec4(s.x, e.x, s.y, e.y);
-}
-
-vec2 df64_add(vec2 a, vec2 b){
-    vec4 st;
-    st = twoSumComp(a, b);
-    
-    st.y += st.z;
-    st.xy = quickTwoSum(st.x, st.y);
-    
-    st.y += st.w;
-    st.xy = quickTwoSum(st.x, st.y);
- 
-    return st.xy;
+    return vec2(s.x, e.x + s.y + e.y);
 }
 
 vec2 df64_mult(vec2 a, vec2 b){
-    vec2 p;
-    
-    p = vec2(a.x * b.x, a.y * b.y);
-    p.y += a.x * b.y + a.y * b.x;
-    p = quickTwoSum(p.x, p.y);
+    float hi = a.x * b.x;
+    float lo = a.y * b.y + a.x * b.y + a.y * b.x;
 
-    return p;
+    float s = (hi + lo) + zero.x; // Stop compiler optimization
+    float e = lo - (s - hi);
+
+    return vec2(s, e);
 }
 
 vec3 get_color(float v, float c){
     float x = v / c * TWOPI;
 
-    float R = 1.0 - cos(x * 5.8);
-    float G = 1.0 - cos(x * 5.5);
-    float B = 1.0 - cos(x * 5.2);
- 
-    return vec3(R, G, B) * 0.5;
+    float R = cos(x * 5.8);
+    float G = cos(x * 5.5);
+    float B = cos(x * 5.2);
+
+    return 0.5 - vec3(R, G, B) * 0.5;
 }
 
 void main() {
-    
+
     vec4 z = vec4(0.0);
     float log_zn = 0.0;
 
@@ -73,8 +52,8 @@ void main() {
     float iter = 0.0;
     float frac = 0.0;
 
-    for(int i = 0; i < 2048; i ++)
-    { 
+    for(int i = 0; i < 8192; i ++)
+    {
         if (iter > iterations) break;
 
         // Real
