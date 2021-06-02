@@ -20,7 +20,7 @@ vec2 df64_add(vec2 a, vec2 b){
 
 vec2 df64_mult(vec2 a, vec2 b){
     float hi = a.x * b.x;
-    float lo = a.y * b.y + a.x * b.y + a.y * b.x;
+    float lo = a.x * b.y + a.y * b.x;
 
     float s = (hi + lo) + zero.x; // Stop compiler optimization
     float e = lo - (s - hi);
